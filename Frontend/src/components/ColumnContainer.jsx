@@ -11,12 +11,14 @@ export function ColumnContainer({
   tasks,
   deleteTask,
   updateTask,
+  onOpenModal,
 }) {
   ColumnContainer.propTypes = {
     column: PropTypes.object,
     createTask: PropTypes.func,
     deleteTask: PropTypes.func,
     updateTask: PropTypes.func,
+    onOpenModal: PropTypes.func,
     tasks: PropTypes.array,
   };
 
@@ -92,6 +94,7 @@ export function ColumnContainer({
               task={task}
               deleteTask={deleteTask}
               updateTask={updateTask}
+              onOpenModal={onOpenModal}
             />
           ))}
         </SortableContext>

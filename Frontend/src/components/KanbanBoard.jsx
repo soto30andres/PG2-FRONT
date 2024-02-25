@@ -19,6 +19,7 @@ import {
   deleteTask as deleteTaskService,
   getTasksByUser,
 } from '../services/tasks';
+import ModalTask from './ModalTask';
 
 const defaultCols = [
   {
@@ -42,6 +43,8 @@ export default function KanbanBoard() {
   const [activeColumn, setActiveColumn] = useState(null);
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
   const [activeTask, setActiveTask] = useState(null);
+  const [editTask, setEditTask] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
 
   const sucessAlert = ({ message }) => toast.success(message);
 
@@ -100,6 +103,14 @@ export default function KanbanBoard() {
 
       return arrayMove(columns, activeColumnIndex, overColumnIndex);
     });
+  }
+
+  function onOpenModal(task) {
+    setEditTask(task);
+    setOpenModal(true);
+  }
+  function onCloseModal() {
+    setOpenModal(false);
   }
 
   function onDragOver(event) {
@@ -163,10 +174,11 @@ export default function KanbanBoard() {
   };
 
   const debouncedUpdateTask = useCallback(
-    debounce((id, content, columnId) => {
+    debounce((id, content, columnId, description = '') => {
       updateTaskService(id, {
         content,
         columnId,
+        description,
       });
       sucessAlert({ message: 'Task updated successfully' });
     }, 300),
@@ -184,15 +196,15 @@ export default function KanbanBoard() {
     }
   }
 
-  const updateTask = async (id, content) => {
+  const updateTask = async (id, content, description) => {
     try {
       const newTasks = tasks.map((task) => {
         if (task.id !== id) return task;
-        return { ...task, content };
+        return { ...task, content, description };
       });
       const task = newTasks.find((task) => task.id === id);
       setTasks(newTasks);
-      debouncedUpdateTask(id, content, task.columnId);
+      debouncedUpdateTask(id, content, task.columnId, description);
     } catch (error) {
       console.log(error);
     }
@@ -201,6 +213,13 @@ export default function KanbanBoard() {
   return (
     <div className="bg-gray-100 m-auto flex min-h-screen w-full items-center overflow-x-auto overflow-y-hidden px-[40px]">
       <Toaster />
+      {openModal && (
+        <ModalTask
+          task={editTask}
+          onCloseModal={onCloseModal}
+          updateTask={updateTask}
+        />
+      )}
       <DndContext
         sensors={sensors}
         onDragStart={onDragStart}
@@ -217,6 +236,7 @@ export default function KanbanBoard() {
                   createTask={createTask}
                   deleteTask={deleteTask}
                   updateTask={updateTask}
+                  onOpenModal={onOpenModal}
                   tasks={tasks.filter((task) => task.columnId === col.id)}
                 />
               ))}
@@ -242,6 +262,7 @@ export default function KanbanBoard() {
                 task={activeTask}
                 deleteTask={deleteTask}
                 updateTask={updateTask}
+                onOpenModal={onOpenModal}
               />
             )}
           </DragOverlay>,

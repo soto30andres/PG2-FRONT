@@ -8,9 +8,15 @@ TaskCard.propTypes = {
   task: PropTypes.object,
   deleteTask: PropTypes.func,
   updateTask: PropTypes.func,
+  onOpenModal: PropTypes.func,
 };
 
-export default function TaskCard({ task, deleteTask, updateTask }) {
+export default function TaskCard({
+  task,
+  deleteTask,
+  updateTask,
+  onOpenModal,
+}) {
   const [mouseIsOver, setMouseIsOver] = useState(false);
   const [editMode, setEditMode] = useState(true);
 
@@ -82,7 +88,8 @@ export default function TaskCard({ task, deleteTask, updateTask }) {
       style={style}
       {...attributes}
       {...listeners}
-      onClick={toggleEditMode}
+      //onClick={toggleEditMode}
+      onDoubleClick={() => onOpenModal(task)}
       className="bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl hover:ring-2 hover:ring-inset hover:ring-gray-500 cursor-grab relative task"
       onMouseEnter={() => {
         setMouseIsOver(true);

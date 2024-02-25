@@ -18,7 +18,10 @@ export const createTask = async ({ content, columnId }) => {
   }
 };
 
-export const updateTask = async (taskId, { content, columnId }) => {
+export const updateTask = async (
+  taskId,
+  { content, columnId, description }
+) => {
   try {
     const response = await fetch(`${API_URL}task/${taskId}`, {
       method: 'PUT',
@@ -26,7 +29,7 @@ export const updateTask = async (taskId, { content, columnId }) => {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + localStorage.getItem('userToken'),
       },
-      body: JSON.stringify({ name: content, state: columnId }),
+      body: JSON.stringify({ name: content, state: columnId, description }),
     });
     const data = await response.json();
     return { id: data.id, title: data.name, columnId: data.state };
@@ -68,6 +71,7 @@ export const getTasksByUser = async () => {
       id: item.id,
       content: item.name,
       columnId: item.state,
+      description: item.description,
     }));
     return listData;
   } catch (error) {
