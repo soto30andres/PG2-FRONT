@@ -18,7 +18,7 @@ export default function TaskCard({
   onOpenModal,
 }) {
   const [mouseIsOver, setMouseIsOver] = useState(false);
-  const [editMode, setEditMode] = useState(true);
+  const [editMode] = useState(true);
 
   const {
     setNodeRef,
@@ -33,7 +33,7 @@ export default function TaskCard({
       type: 'Task',
       task,
     },
-    disabled: editMode,
+    disabled: false,
   });
 
   const style = {
@@ -42,7 +42,6 @@ export default function TaskCard({
   };
 
   const toggleEditMode = () => {
-    setEditMode((prev) => !prev);
     setMouseIsOver(false);
   };
 
@@ -51,7 +50,7 @@ export default function TaskCard({
       <div
         ref={setNodeRef}
         style={style}
-        className=" bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl border-2 border-gray-500  cursor-grab relative"
+        className=" bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl border-2 border-gray-500  cursor-pointer relative"
       />
     );
   }
@@ -63,12 +62,13 @@ export default function TaskCard({
         style={style}
         {...attributes}
         {...listeners}
-        className="bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl hover:ring-2 hover:ring-inset hover:ring-gray-500 cursor-grab relative"
+        className="bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl hover:ring-2 hover:ring-inset hover:ring-gray-500 cursor-pointer relative"
       >
         <textarea
           className="h-[90%] w-full resize-none border-none rounded bg-transparent text-gray-500 focus:outline-none"
           value={task.content}
           autoFocus
+          onDoubleClick={() => onOpenModal(task)}
           placeholder="Task content here"
           onBlur={toggleEditMode}
           onKeyDown={(e) => {
@@ -90,7 +90,7 @@ export default function TaskCard({
       {...listeners}
       //onClick={toggleEditMode}
       onDoubleClick={() => onOpenModal(task)}
-      className="bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl hover:ring-2 hover:ring-inset hover:ring-gray-500 cursor-grab relative task"
+      className="bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl hover:ring-2 hover:ring-inset hover:ring-gray-500 cursor-pointer relative task"
       onMouseEnter={() => {
         setMouseIsOver(true);
       }}
