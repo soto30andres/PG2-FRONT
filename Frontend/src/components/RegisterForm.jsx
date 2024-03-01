@@ -115,10 +115,9 @@ export function RegisterForm() {
               message: 'Max length is 12',
             },
             pattern: {
-              value:
-                /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-{}\[\]:;"'<>,.?/~`|\\=]).{8,}$/,
+              value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/,
               message:
-                'The password must contain letters and numbers and special characters',
+                'The password must contain letters, captain letters and numbers',
             },
           })}
           id="password"

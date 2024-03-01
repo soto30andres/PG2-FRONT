@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { useForm } from 'react-hook-form';
 
 ModalTask.propTypes = {
   task: PropTypes.object,
@@ -7,15 +8,30 @@ ModalTask.propTypes = {
 };
 
 export default function ModalTask({ task, onCloseModal, updateTask }) {
-  const { content: title, description } = task;
+  ErrorMessage.propTypes = {
+    field: PropTypes.string,
+  };
 
-  async function handleSubmit(event) {
-    event.preventDefault();
-    const name = event.target.name.value;
-    const description = event.target.description.value;
-    await updateTask(task.id, name, description);
-    onCloseModal();
+  const { content: title, description } = task;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  function ErrorMessage({ field }) {
+    return <small className="text-red-400">{errors[field].message}</small>;
   }
+
+  const onSubmit = async ({ title, description }) => {
+    try {
+      await updateTask(task.id, title, description);
+      onCloseModal();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div
       aria-hidden="true"
@@ -49,24 +65,36 @@ export default function ModalTask({ task, onCloseModal, updateTask }) {
               <span className="sr-only">Close modal</span>
             </button>
           </div>
-          <form className="p-4 md:p-5" onSubmit={handleSubmit}>
+          <form className="p-4 md:p-5" onSubmit={handleSubmit(onSubmit)}>
             <div className="grid gap-4 mb-4 grid-cols-2">
               <div className="col-span-2">
                 <label
-                  htmlFor="name"
+                  htmlFor="title"
                   className="block mb-2 text-sm font-medium text-gray-900"
                 >
                   Title
                 </label>
                 <input
                   type="text"
-                  name="name"
-                  id="name"
+                  name="title"
+                  id="title"
+                  {...register('title', {
+                    required: 'This field is required',
+                    minLength: {
+                      value: 5,
+                      message: 'Min length is 5',
+                    },
+                    maxLength: {
+                      value: 50,
+                      message: 'Max length is 50',
+                    },
+                  })}
                   defaultValue={title}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                   placeholder="Type task title"
                   required=""
                 />
+                {errors.title && <ErrorMessage field="title" />}
               </div>
               <div className="col-span-2">
                 <label
@@ -81,6 +109,7 @@ export default function ModalTask({ task, onCloseModal, updateTask }) {
                   rows="4"
                   className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Write task description here"
+                  {...register('description')}
                 ></textarea>
               </div>
             </div>
