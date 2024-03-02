@@ -27,8 +27,12 @@ export function RegisterForm() {
         email,
         password,
       });
-      successRegister({ message: dataUser.message });
-      setTimeout(() => setLocation('/tasks'), 500);
+      if (dataUser.data.token) {
+        successRegister({ message: dataUser.message });
+        setTimeout(() => setLocation('/tasks'), 500);
+      } else {
+        errorRegister({ message: 'Failed Register' });
+      }
     } catch (error) {
       errorRegister({ message: error.message });
     }
@@ -52,6 +56,14 @@ export function RegisterForm() {
           id="firstName"
           {...register('firstName', {
             required: 'This field is required',
+            maxLength: {
+              value: 50,
+              message: 'Max length is 50',
+            },
+            pattern: {
+              value: /^[A-Za-z]+$/,
+              message: 'invalid first name, only letters are allowed',
+            },
           })}
           className=" text-sm h-16 rounded-lg block w-full p-2.5 bg-[#F3F4F6]"
         />
@@ -69,6 +81,14 @@ export function RegisterForm() {
           id="lastName"
           {...register('lastName', {
             required: 'This field is required',
+            maxLength: {
+              value: 50,
+              message: 'Max length is 50',
+            },
+            pattern: {
+              value: /^[A-Za-z]+$/,
+              message: 'invalid last name, only letters are allowed',
+            },
           })}
           className=" text-sm h-16 rounded-lg block w-full p-2.5 bg-[#F3F4F6]"
         />
@@ -86,6 +106,10 @@ export function RegisterForm() {
           id="email"
           {...register('email', {
             required: 'This field is required',
+            maxLength: {
+              value: 50,
+              message: 'Max length is 50',
+            },
             pattern: {
               value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
               message: 'invalid email address',
@@ -117,7 +141,7 @@ export function RegisterForm() {
             pattern: {
               value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/,
               message:
-                'The password must contain letters, captain letters and numbers',
+                'The password must include at least one number, one uppercase and one lowercase',
             },
           })}
           id="password"

@@ -27,7 +27,9 @@ export const register = async ({ firstName, lastName, email, password }) => {
       body: JSON.stringify({ firstName, lastName, email, password }),
     });
     const data = await response.json();
-    localStorage.setItem('userToken', data.token);
+    if (data.token) {
+      localStorage.setItem('userToken', data.token);
+    }
     return {
       data,
       message: 'Successfully register!',
