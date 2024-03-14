@@ -2,17 +2,17 @@ import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 
 ModalProject.propTypes = {
-  task: PropTypes.object,
+  project: PropTypes.object,
   onCloseModal: PropTypes.func,
   updateTask: PropTypes.func,
 };
 
-export default function ModalProject({ task, onCloseModal, updateTask }) {
+export default function ModalProject({ project, onCloseModal, updateTask }) {
   ErrorMessage.propTypes = {
     field: PropTypes.string,
   };
 
-  const { content: title, description } = task;
+  const { content: title, description } = project;
   const {
     register,
     handleSubmit,
@@ -25,7 +25,7 @@ export default function ModalProject({ task, onCloseModal, updateTask }) {
 
   const onSubmit = async ({ title, description }) => {
     try {
-      await updateTask(task.id, title, description);
+      await updateTask(project.id, title, description);
       onCloseModal();
     } catch (error) {
       console.log(error);
@@ -40,7 +40,9 @@ export default function ModalProject({ task, onCloseModal, updateTask }) {
       <div className="relative p-4 w-full max-w-md max-h-full">
         <div className="relative bg-white rounded-lg shadow">
           <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
-            <h3 className="text-lg font-semibold text-gray-900">Task Detail</h3>
+            <h3 className="text-lg font-semibold text-gray-900">
+              Project Detail
+            </h3>
             <button
               type="button"
               className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -91,7 +93,7 @@ export default function ModalProject({ task, onCloseModal, updateTask }) {
                   })}
                   defaultValue={title}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                  placeholder="Type task title"
+                  placeholder="Type project title"
                   required=""
                 />
                 {errors.title && <ErrorMessage field="title" />}
@@ -108,9 +110,15 @@ export default function ModalProject({ task, onCloseModal, updateTask }) {
                   defaultValue={description}
                   rows="4"
                   className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Write task description here"
-                  {...register('description')}
+                  placeholder="Type project description here"
+                  {...register('description', {
+                    maxLength: {
+                      value: 500,
+                      message: 'Max length is 500',
+                    },
+                  })}
                 ></textarea>
+                {errors.description && <ErrorMessage field="description" />}
               </div>
             </div>
             <button
