@@ -1,5 +1,6 @@
 import KanbanBoard from '../components/KanbanBoard';
 import { useLocation } from 'wouter';
+import { ProjectList } from '../components/ProjectList';
 
 export function Tasks() {
   const [, setLocation] = useLocation();
@@ -12,7 +13,12 @@ export function Tasks() {
       <button className="text-red-500 font-bold p-3" onClick={signOutUser}>
         SignOut
       </button>
-      <KanbanBoard />
+      <article className="grid grid-cols-4 gap-4">
+        <ProjectList />
+        <div className="col-span-3">
+          <KanbanBoard />
+        </div>
+      </article>
     </div>
   );
 }
