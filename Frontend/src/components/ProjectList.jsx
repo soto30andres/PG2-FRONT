@@ -1,11 +1,18 @@
 import { useEffect, useState } from 'react';
 import ModalProject from './ModalProject';
+import PropTypes from 'prop-types';
 import {
   createBoard as createBoardService,
   updateBoard as updateBoardService,
   getBoardsByUser,
 } from '../services/board';
-export const ProjectList = () => {
+
+ProjectList.propTypes = {
+  selectProject: PropTypes.func,
+  boardId: PropTypes.number,
+};
+
+export default function ProjectList({ selectProject, boardId }) {
   const [editProject, setEditProject] = useState({
     title: '',
     description: '',
@@ -111,11 +118,19 @@ export const ProjectList = () => {
               <ul className="flex flex-col gap-4">
                 {boards.map((board) => (
                   <li
+                    onClick={() => {
+                      selectProject(board.id);
+                    }}
                     key={board.id}
-                    className="bg-gray-200 p-4 rounded-lg flex items-center justify-between"
+                    className={`bg-gray-200 p-4 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-300 transition-all duration-200 ease-in-out ${
+                      boardId === board.id
+                        ? 'bg-blue-200 hover:bg-blue-200'
+                        : null
+                    }`}
                   >
                     <h4 className="text-gray-600 text-lg font-bold ">
                       {board.title}
+                      {boardId}
                     </h4>
                     <div>
                       <button
@@ -219,4 +234,4 @@ export const ProjectList = () => {
       </section>
     </div>
   );
-};
+}

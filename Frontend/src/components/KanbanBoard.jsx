@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import PropTypes from 'prop-types';
 import { ColumnContainer } from './ColumnContainer';
 import {
   DndContext,
@@ -35,8 +36,11 @@ const defaultCols = [
     title: 'Done',
   },
 ];
+KanbanBoard.propTypes = {
+  projectId: PropTypes.number,
+};
 
-export default function KanbanBoard() {
+export default function KanbanBoard({ projectId }) {
   const [columns, setColumns] = useState(defaultCols);
   const [tasks, setTasks] = useState([]);
   const [, setLocation] = useLocation();
@@ -53,14 +57,14 @@ export default function KanbanBoard() {
 
     async function getTasks() {
       try {
-        const tasks = await getTasksByUser();
+        const tasks = await getTasksByUser({ boardId: projectId });
         setTasks(tasks);
       } catch (error) {
         console.log(error);
       }
     }
     getTasks();
-  }, [tasks.length, setLocation]);
+  }, [tasks.length, setLocation, projectId]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -166,6 +170,7 @@ export default function KanbanBoard() {
       const dataTask = await createTaskService({
         columnId,
         content: `Task ${tasks.length + 1}`,
+        boardId: projectId,
       });
       setTasks([...tasks, dataTask]);
     } catch (error) {
@@ -179,6 +184,7 @@ export default function KanbanBoard() {
         content,
         columnId,
         description,
+        boardId: projectId,
       });
       sucessAlert({ message: 'Task updated successfully' });
     }, 300),
