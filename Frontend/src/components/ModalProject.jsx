@@ -4,10 +4,16 @@ import { useForm } from 'react-hook-form';
 ModalProject.propTypes = {
   project: PropTypes.object,
   onCloseModal: PropTypes.func,
-  updateTask: PropTypes.func,
+  updateBoard: PropTypes.func,
+  createBoard: PropTypes.func,
 };
 
-export default function ModalProject({ project, onCloseModal, updateTask }) {
+export default function ModalProject({
+  project,
+  onCloseModal,
+  updateBoard,
+  createBoard,
+}) {
   ErrorMessage.propTypes = {
     field: PropTypes.string,
   };
@@ -25,8 +31,11 @@ export default function ModalProject({ project, onCloseModal, updateTask }) {
 
   const onSubmit = async ({ title, description }) => {
     try {
-      await updateTask(project.id, title, description);
-      onCloseModal();
+      if (project.id) {
+        await updateBoard(project.id, title, description);
+      } else {
+        await createBoard(title, description);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -41,7 +50,7 @@ export default function ModalProject({ project, onCloseModal, updateTask }) {
         <div className="relative bg-white rounded-lg shadow">
           <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
             <h3 className="text-lg font-semibold text-gray-900">
-              Project Detail
+              Board Detail
             </h3>
             <button
               type="button"

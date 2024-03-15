@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import ModalProject from './ModalProject';
-
+import {
+  createBoard as createBoardService,
+  updateBoard as updateBoardService,
+} from '../services/board';
 export const ProjectList = () => {
   const [editProject, setEditProject] = useState({
     title: '',
@@ -11,6 +14,26 @@ export const ProjectList = () => {
   function onCreateProject() {
     setEditProject({ title: '', description: '' });
     onOpenModal();
+  }
+
+  async function createBoard(title, description) {
+    console.log(title, description);
+    try {
+      await createBoardService({ name: title, description });
+      onCloseModal();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function updateBoard(boardId, title, description) {
+    console.log(title, description);
+    try {
+      await updateBoardService(boardId, { name: title, description });
+      onCloseModal();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   function onOpenModal() {
@@ -27,7 +50,7 @@ export const ProjectList = () => {
           onClick={onCreateProject}
           className="w-full bg-gray-300 hover:text-white hover:bg-gray-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex justify-center items-center "
         >
-          Add new project &nbsp;
+          Add new board &nbsp;
           <svg
             className="w-4 h-4 text-gray-800 "
             aria-hidden="true"
@@ -49,17 +72,14 @@ export const ProjectList = () => {
         <article>
           <div className="flex flex-col items-center justify-center">
             <h2 className="text-3xl font-bold text-gray-800 mt-8 mb-4">
-              No projects yet
+              No board yet
             </h2>
-            <p className="text-gray-600 text-lg text-center">
-              Create a new project to start a new board
-            </p>
           </div>
         </article>
         <article>
           <section className="mt-8">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">
-              Active Projects
+              Active Boards
             </h2>
             <ul className="flex flex-col gap-4">
               <li className="bg-gray-200 p-4 rounded-lg flex items-center justify-between">
@@ -110,7 +130,7 @@ export const ProjectList = () => {
           </section>
           <section className="mt-8">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">
-              Closed Projects
+              Closed Boards
             </h2>
             <ul className="flex flex-col gap-4">
               {/* {closedProjects.map((project) => (
@@ -151,7 +171,12 @@ export const ProjectList = () => {
           </section>
         </article>
         {openModal && (
-          <ModalProject project={editProject} onCloseModal={onCloseModal} />
+          <ModalProject
+            project={editProject}
+            onCloseModal={onCloseModal}
+            createBoard={createBoard}
+            updateBoard={updateBoard}
+          />
         )}
       </section>
     </div>

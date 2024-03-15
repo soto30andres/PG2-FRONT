@@ -1,7 +1,7 @@
 import KanbanBoard from '../components/KanbanBoard';
 import { useLocation } from 'wouter';
 import { ProjectList } from '../components/ProjectList';
-import NoSelectProject from '../components/NoSelectProject';
+import NoSelectBoard from '../components/NoSelectBoard';
 import { useState } from 'react';
 
 export function Tasks() {
@@ -23,7 +23,7 @@ export function Tasks() {
           {projectId ? (
             <KanbanBoard projectId={projectId} />
           ) : (
-            <NoSelectProject />
+            <NoSelectBoard />
           )}
         </div>
       </article>
