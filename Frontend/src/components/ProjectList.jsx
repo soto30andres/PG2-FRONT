@@ -130,7 +130,6 @@ export default function ProjectList({ selectProject, boardId }) {
                   >
                     <h4 className="text-gray-600 text-lg font-bold ">
                       {board.title}
-                      {boardId}
                     </h4>
                     <div>
                       <button
