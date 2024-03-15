@@ -18,7 +18,7 @@ export default function ModalProject({
     field: PropTypes.string,
   };
 
-  const { content: title, description } = project;
+  const { title, description } = project;
   const {
     register,
     handleSubmit,
