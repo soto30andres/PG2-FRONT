@@ -55,33 +55,6 @@ export default function TaskCard({
     );
   }
 
-  if (editMode) {
-    return (
-      <div
-        ref={setNodeRef}
-        style={style}
-        {...attributes}
-        {...listeners}
-        className="bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl hover:ring-2 hover:ring-inset hover:ring-gray-500 cursor-pointer relative"
-      >
-        <textarea
-          className="h-[90%] w-full resize-none border-none rounded bg-transparent text-gray-500 focus:outline-none"
-          value={task.content}
-          autoFocus
-          onDoubleClick={() => onOpenModal(task)}
-          placeholder="Task content here"
-          onBlur={toggleEditMode}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && e.shiftKey) {
-              toggleEditMode();
-            }
-          }}
-          onChange={(e) => updateTask(task.id, e.target.value)}
-        />
-      </div>
-    );
-  }
-
   return (
     <div
       ref={setNodeRef}
@@ -101,16 +74,15 @@ export default function TaskCard({
       <p className="my-auto h-[90%] w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap">
         {task.content}
       </p>
-      {mouseIsOver && (
-        <button
-          onClick={() => {
-            deleteTask(task.id);
-          }}
-          className="stroke-white absolute right-4 top-1/2 -translate-y-1/2 bg-columnBackgroundColor p-2 rounded "
-        >
-          <TrashIcon />
-        </button>
-      )}
+
+      <button
+        onClick={() => {
+          deleteTask(task.id);
+        }}
+        className="stroke-white absolute right-4 top-1/2 -translate-y-1/2 bg-columnBackgroundColor p-2 rounded :hover:bg-red-500 transition-colors duration-300 ease-in-out"
+      >
+        <TrashIcon />
+      </button>
     </div>
   );
 }

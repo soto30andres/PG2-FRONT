@@ -1,6 +1,6 @@
 import { API_URL } from '../config';
 
-export const createTask = async ({ content, columnId }) => {
+export const createTask = async ({ content, columnId, boardId }) => {
   try {
     const response = await fetch(`${API_URL}task`, {
       method: 'POST',
@@ -8,7 +8,7 @@ export const createTask = async ({ content, columnId }) => {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + localStorage.getItem('userToken'),
       },
-      body: JSON.stringify({ name: content, state: columnId }),
+      body: JSON.stringify({ name: content, state: columnId, boardId }),
     });
     const data = await response.json();
     return { id: data.id, title: data.name, columnId: data.state };
@@ -20,7 +20,7 @@ export const createTask = async ({ content, columnId }) => {
 
 export const updateTask = async (
   taskId,
-  { content, columnId, description }
+  { content, columnId, description, boardId }
 ) => {
   try {
     const response = await fetch(`${API_URL}task/${taskId}`, {
@@ -29,7 +29,12 @@ export const updateTask = async (
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + localStorage.getItem('userToken'),
       },
-      body: JSON.stringify({ name: content, state: columnId, description }),
+      body: JSON.stringify({
+        name: content,
+        state: columnId,
+        description,
+        boardId,
+      }),
     });
     const data = await response.json();
     return { id: data.id, title: data.name, columnId: data.state };
@@ -56,11 +61,11 @@ export const deleteTask = async (taskId) => {
   }
 };
 
-export const getTasksByUser = async () => {
+export const getTasksByUser = async ({ boardId }) => {
   const token = localStorage.getItem('userToken');
 
   try {
-    const response = await fetch(`${API_URL}task`, {
+    const response = await fetch(`${API_URL}task?boardId=${boardId}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
